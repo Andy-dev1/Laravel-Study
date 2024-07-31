@@ -73,6 +73,16 @@ class SiteContato extends Model
     $fornecedor->save();
     
     Fornecedor::whereIn('id',[1,2])->update(['nome'=>'Fornecedor Teste','site'=>'teste.com.br']);
+    
+    DELETE
+    use \App\Models\SiteContato;
+    $contato = SiteContato::find(4);
+    $contato->delete();
+    SiteContato::find(7)->delete();
+    SiteContato::destroy(5);
+
+    Soft Delete
+    
     */
     use HasFactory;
 }
