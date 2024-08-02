@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call(FornecedorSeeder::class);
         $this->call(SiteContatoSeeder::class);
+        $this->call(MotivoContatoSeeder::class);
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
