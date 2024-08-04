@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\FornecedorController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PrincipalController;
 use App\Http\Controllers\SobreNosController;
 use App\Http\Controllers\TesteController;
@@ -16,22 +17,18 @@ Route::get('/sobre-nos', [SobreNosController::class, 'sobreNos'])->name('site.so
 // Route::middleware(LogAcessoMiddleware::class)->get('/contato', [ContatoController::class, 'contato'])->name('site.contato');
 Route::get('/contato', [ContatoController::class, 'contato'])->name('site.contato');
 Route::post('/contato', [ContatoController::class, 'salvar'])->name('site.contato');
-Route::get('/login', function () {
-    return 'Login';
-})->name('site.login');
+Route::get('/login/{erro?}', [LoginController::class,'index'])->name('site.login');
+Route::post('/login', [LoginController::class,'autenticar'])->name('site.login');
 
 
 //Agrupando rotas para /aapp
-Route::prefix('/app')->group(function () {
-    Route::middleware('autenticacao')
-        ->get('/clientes', function () {
+Route::middleware('autenticacao:padrao,visitante')->prefix('/app')->group(function () {
+    Route::get('/clientes', function () {
             return 'clientes';
         })->name('app.clientes');
-    Route::middleware('autenticacao')
-        ->get('/fornecedores', [FornecedorController::class, 'index'])
+    Route::get('/fornecedores', [FornecedorController::class, 'index'])
         ->name('app.fornecedores');
-    Route::middleware('autenticacao')
-        ->get('/produtos', function () {
+    Route::get('/produtos', function () {
             return 'produtos';
         })->name('app.produtos');
 });
