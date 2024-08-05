@@ -15,23 +15,30 @@ class AutenticacaoMiddleware
      */
     public function handle(Request $request, Closure $next, $metodo_autenticacao,$perfil): Response
     {
-        echo $metodo_autenticacao.' - '.$perfil.'<br>';
-        if($metodo_autenticacao=='padrao'){
-            echo 'Verificar o usuário e senha no banco de dados '.$perfil.'<br>';
-        }
-        if($metodo_autenticacao=='ldap'){
-            echo 'Verificar o usuário e senha no AD '.$perfil.'<br>';
-        }
-        if($perfil=='visitante'){
-            echo 'Exibir apenas alguns recursos '.$perfil.'<br>';
-        }
+        // echo $metodo_autenticacao.' - '.$perfil.'<br>';
+        // if($metodo_autenticacao=='padrao'){
+        //     echo 'Verificar o usuário e senha no banco de dados '.$perfil.'<br>';
+        // }
+        // if($metodo_autenticacao=='ldap'){
+        //     echo 'Verificar o usuário e senha no AD '.$perfil.'<br>';
+        // }
+        // if($perfil=='visitante'){
+        //     echo 'Exibir apenas alguns recursos '.$perfil.'<br>';
+        // }
 
-        if(false){
-            return $next($request);
-        }else{
-            return Response('Acesso Negado! Rota exige autenticação!!!');
-        }
-        //return $next($request);
+        // if(false){
+        //     return $next($request);
+        // }else{
+        //     return Response('Acesso Negado! Rota exige autenticação!!!');
+        // }
+        // //return $next($request);
         
+        session_start();
+        if(isset($_SESSION['email'])&&$_SESSION['email']!=''){
+            return ($next($request));
+
+        }else{
+            return redirect()->route('site.login',['erro'=>2]);
+        }
     }
 }
