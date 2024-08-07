@@ -48,9 +48,9 @@ class FornecedorController extends Controller
             ->where('site', 'like', '%' . $request->input('site') . '%')
             ->where('uf', 'like', '%' . $request->input('uf') . '%')
             ->where('email', 'like', '%' . $request->input('email') . '%')
-            ->get();
+            ->paginate(2);
         
-        return view('app.fornecedor.listar',["fornecedores"=>$fornecedores]);
+        return view('app.fornecedor.listar',["fornecedores"=>$fornecedores,"request"=>$request->all()]);
     }
     public function adicionar(Request $request)
     {
@@ -101,5 +101,11 @@ class FornecedorController extends Controller
         // echo "Chegamos até aqui";
         $fornecedor=Fornecedor::find($id);
         return view('app.fornecedor.adicionar',['fornecedor'=>$fornecedor,'msg'=>$msg]);
+    }
+    public function excluir($id){
+        // echo "Remover o registro de ID $id";
+        Fornecedor::find($id)->delete(); //Com soft delete
+        //Fornecedor::find($id)->forceDelete() //Irá deletar permanentemente no banco sem o soft delete
+        return redirect()->route('app.fornecedor');
     }
 }
