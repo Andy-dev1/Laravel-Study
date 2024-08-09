@@ -72,7 +72,8 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         $unidades=Unidade::all();
-        return view("app.produto.edit", ["produto" => $produto,'unidades'=>$unidades]);
+        //return view("app.produto.edit", ["produto" => $produto,'unidades'=>$unidades]);
+        return view("app.produto.create", ["produto" => $produto,'unidades'=>$unidades]);
     }
 
     /**
@@ -80,7 +81,12 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
-        //
+        print_r($request->all());//Payload
+        echo "<br><br><br>";
+        print_r($produto->getAttributes()); //Instancia do objeto antes do payload
+
+        $produto->update($request->all());
+        return redirect()->route("produto.show",['produto'=>$produto->id]);
     }
 
     /**
@@ -88,6 +94,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Produto $produto)
     {
-        //
+        $produto->delete();
+        return redirect()->route("produto.index");
     }
 }
