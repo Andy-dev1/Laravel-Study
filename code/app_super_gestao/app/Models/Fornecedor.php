@@ -28,5 +28,9 @@ class Fornecedor extends Model
         Fornecedor::onlyTrashed()->get();
         $fornecedores[0]->restore();
     */
+    public function produtos(){
+        return $this->hasMany('App\Models\Item','fornecedor_id','id');
+        //return $this->hasMany('App\Models\Item');
+    }
     use HasFactory;
 }

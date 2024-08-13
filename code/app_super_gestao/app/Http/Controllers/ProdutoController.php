@@ -20,7 +20,7 @@ class ProdutoController extends Controller
     {
         //$produtos = Produto::paginate(10);
         //Eager loading
-        $produtos = Item::with(['itemDetalhe'])->paginate(10);
+        $produtos = Item::with(['itemDetalhe','fornecedor'])->paginate(10);
         /*
         foreach($produtos as $key => $produto){
             //print_r($produto->getAttributes());
