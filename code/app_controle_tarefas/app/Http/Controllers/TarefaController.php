@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Tarefa;
 use App\Http\Controllers\Controller;
+use App\Mail\NovaTarefaMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TarefaController extends Controller
 {
@@ -18,11 +20,14 @@ class TarefaController extends Controller
      */
     public function index()
     {
+        $user_id = Auth::user()->id;
+        $tarefas = Tarefa::where('user_id',$user_id)->paginate(2);
+        return view('tarefa.index',['tarefas'=>$tarefas]);
 
-        $id=Auth::user()->id;
-        $name=Auth::user()->name;
-        $email=Auth::user()->email;
-        return "ID: $id | Nome: $name | Email: $email";
+        // $id=Auth::user()->id;
+        // $name=Auth::user()->name;
+        // $email=Auth::user()->email;
+        // return "ID: $id | Nome: $name | Email: $email";
 
         // if(Auth::check()){
         //      $id=Auth::user()->id;
@@ -57,7 +62,11 @@ class TarefaController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $tarefa = Tarefa::create($request->all());
+        $dados = $request->all('tarefa','data_limite_conclusao');
+        $dados['user_id']=Auth::user()->id;
+        $tarefa = Tarefa::create($dados);
+        $destinatario = Auth::user()->email;
+        Mail::to($destinatario)->send(new NovaTarefaMail($tarefa));
         return redirect()->route('tarefa.show',['tarefa'=>$tarefa->id]);
         dd($tarefa->id);
     }
@@ -67,7 +76,7 @@ class TarefaController extends Controller
      */
     public function show(Tarefa $tarefa)
     {
-        dd($tarefa->getAttributes());
+        return view('tarefa.show',['tarefa'=>$tarefa]);
     }
 
     /**
