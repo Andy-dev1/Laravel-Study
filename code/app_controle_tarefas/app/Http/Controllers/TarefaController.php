@@ -6,6 +6,7 @@ use App\Exports\TarefasExport;
 use App\Models\Tarefa;
 use App\Http\Controllers\Controller;
 use App\Mail\NovaTarefaMail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -146,5 +147,15 @@ class TarefaController extends Controller
         // }
         
         //return Excel::download(new TarefasExport,$nome_arquivo);
+    }
+
+    public function exportar(){
+        $tarefas = auth()->user()->tarefas()->get();
+
+        $pdf = Pdf::loadView('tarefa.pdf',['tarefas'=>$tarefas]);
+        $pdf->setPaper('a4','landscape');
+
+        //return $pdf->download('invoice.pdf');
+        return $pdf->stream('invoice.pdf');
     }
 }
