@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./vue.js"></script>
+    <title>Document</title>
+    <style>
+        .verde{
+            background-color:green
+        }
+        .azul{
+            background-color:blue
+        }
+        .negrito{
+            font-weight: bold;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+        <!-- {{somar()}}<br>
+        {{subtrair()}}<br>
+        {{multiplicar()}}<br>
+        {{dividir()}}<br> -->
+       
+      <!-- {{mensagem}}<br /> -->
+      <!-- Valor total: {{valorTotal}}<br />
+      Logado: {{logado}}<br />
+      Hobbie:{{hobbies[1]}}<br />
+      Perfil:{{perfil.site}},{{perfil.cursos[0].nome}} -->
+
+      <!-- <a :href="site">Site</a>
+      <p :class="cor" class="negrito">Entendendo a diretiva v-bind</p>
+      <input type="text" name="" id="" v-bind:placeholder="instrucaoDePreenchimento" v-bind:value="valor">
+      <input type="checkbox" name="" id="" v-bind:checked="check"> -->
+      {{2+2}}
+        <input type="text" name="" id="" :value="mensagem" :class="teste?'verde':estilo">
+    </div>
+
+    <script>
+      const vm = new Vue({
+        el: "#app", //# id e . class
+        data: {
+            // n1:10,
+            // n2:5
+        //   //Variaveis reativas
+        //   mensagem: "Primeiro template controlado pelo Vue", //string
+        //   valorTotal: 150.7,
+        //   logado: false,
+        //   hobbies: ["Dormir", "Video games", "Trilhas", "Correr"],
+        //   perfil: {
+        //     nome: "Jorge",
+        //     site: "jorge.com.br",
+        //     idade: 33,
+        //     cursos: [
+        //       { nome: "Laravel", cargaHoraria: "50 horas" },
+        //       { nome: "Bancos de Dados Relacionais", cargaHoraria: "40 horas" },
+        //     ],
+        //   },
+            // site:'https://www.andrelemos.site/',
+            // cor:"verde",
+            // instrucaoDePreenchimento:"Placeholder- v-bind",
+            // valor:"Entendendo a diretiva v-bind",
+            // check:true
+            mensagem:"Expressão",
+            estilo:"azul",
+            teste:true
+        },
+        methods:{
+            // somar:function somar(){ // Convencional
+            //     return this.n1+this.n2;
+            // },
+            // subtrair:function(){ //Anônima
+            //     return this.n1-this.n2;
+            // },
+            // multiplicar:()=>{ //arrow function
+                
+            //     return this.n1*this.n2; // Contexto léxico
+            // },
+            // dividir(){//forma enxuta de definir os pares de chave/valor
+            //     return this.n1/this.n2;
+            // },
+           
+        }
+      }); //vm = ViewModel
+    </script>
+  </body>
+</html>
