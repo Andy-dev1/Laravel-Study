@@ -9,11 +9,30 @@
         .verde{
             background-color:green
         }
+        .branco{
+            background-color:white
+        }
         .azul{
             background-color:blue
         }
+        .vermelho{
+            background-color:red
+        }
         .negrito{
             font-weight: bold;
+        }
+        .borda{
+          border:1px solid
+        }
+
+        .div-principal{
+          width: 200px;
+          height: 200px;
+        }
+        .div-comum{
+          width: 50px;
+          height: 50px;
+          display: inline-block;
         }
     </style>
   </head>
@@ -34,8 +53,20 @@
       <p :class="cor" class="negrito">Entendendo a diretiva v-bind</p>
       <input type="text" name="" id="" v-bind:placeholder="instrucaoDePreenchimento" v-bind:value="valor">
       <input type="checkbox" name="" id="" v-bind:checked="check"> -->
-      {{2+2}}
-        <input type="text" name="" id="" :value="mensagem" :class="teste?'verde':estilo">
+      <!-- {{2+2}}
+        <input type="text" name="" id="" :value="mensagem" :class="teste?'verde':estilo"> -->
+      <!-- <input type="text" name="" id="" @keyup="imprimirTexto('Enviando parâmetro')">
+      <button v-on:click="mensagemAlerta($event)">Botão</button> -->
+      <div class="borda div-principal" :class="cor">
+        Cor: {{cor}}
+        <br>
+        Posição X do Mouse: {{posX}}
+        Posição Y do Mouse: {{posY}}
+      </div>
+      <hr>
+      <div @click="mudarCor('verde')" class="borda div-comum"></div>
+      <div @mouseover="mudarCor('azul')" @mouseout="mudarCor('vermelho')" class="borda div-comum"></div>
+      <div @mousemove="coordenadas($event)" class="borda div-comum"></div>
     </div>
 
     <script>
@@ -63,9 +94,12 @@
             // instrucaoDePreenchimento:"Placeholder- v-bind",
             // valor:"Entendendo a diretiva v-bind",
             // check:true
-            mensagem:"Expressão",
-            estilo:"azul",
-            teste:true
+            // mensagem:"Expressão",
+            // estilo:"azul",
+            // teste:true
+          cor:'',
+          posX:0,
+          posY:0
         },
         methods:{
             // somar:function somar(){ // Convencional
@@ -81,7 +115,22 @@
             // dividir(){//forma enxuta de definir os pares de chave/valor
             //     return this.n1/this.n2;
             // },
-           
+          //  imprimirTexto(t){
+          //   console.log(t);
+            
+          //  },
+          //  mensagemAlerta(e){
+          //   console.log(e);
+            
+          //  }
+          mudarCor(c){
+            this.cor=c;
+            
+          },
+          coordenadas(e){
+            this.posX=e.clientX;
+            this.posY=e.clientY;
+          }
         }
       }); //vm = ViewModel
     </script>
