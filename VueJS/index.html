@@ -57,7 +57,7 @@
         <input type="text" name="" id="" :value="mensagem" :class="teste?'verde':estilo"> -->
       <!-- <input type="text" name="" id="" @keyup="imprimirTexto('Enviando parâmetro')">
       <button v-on:click="mensagemAlerta($event)">Botão</button> -->
-      <div class="borda div-principal" :class="cor">
+      <!-- <div class="borda div-principal" :class="cor">
         Cor: {{cor}}
         <br>
         Posição X do Mouse: {{posX}}
@@ -66,7 +66,35 @@
       <hr>
       <div @click="mudarCor('verde')" class="borda div-comum"></div>
       <div @mouseover="mudarCor('azul')" @mouseout="mudarCor('vermelho')" class="borda div-comum"></div>
-      <div @mousemove="coordenadas($event)" class="borda div-comum"></div>
+      <div @mousemove="coordenadas($event)" class="borda div-comum"></div> -->
+      <!-- <a href="https://www.andrelemos.site/" 
+      target="_blank" 
+      v-on:click.prevent="prevenirComportamentoPadrao()">Link</a>
+      Mensagem:{{msg}}
+      <hr>
+      <button @click.once="executarUmaVez()">Botão</button>
+      <p>Cliques: {{cliques}}</p>
+      <hr>
+      <form action="" @submit.prevent.once="prevenirUmaVez()">
+        <button type="submit">Enviar</button>
+      </form>
+      <p>Formulário: {{formulario}}</p>
+      <hr>
+      <input type="text" name="" id="" @keyup.x.c="capturandoTeclas($event)">
+      <p>Teclas: {{teclas}}</p> -->
+      <input type="text" name="" id="inputTexto">
+      <button @click="selecionarElementoFilho()">Botão</button>
+      <select name="" id="opcoes">
+        <option value="A">Opcao 1</option>
+        <option value="B">Opcao 2</option>
+        <option value="C">Opcao 3</option>
+        <option value="D">Opcao 4</option>
+        <option value="E">Opcao 5</option>
+      </select>
+      <br>
+      <p id="paragrafo" style="color:red">Parágrafo</p>
+      <button @click="selecionarElementoFilho()">Botão</button>
+      <div id="bloco">Conteúdo interno da div</div>
     </div>
 
     <script>
@@ -97,9 +125,13 @@
             // mensagem:"Expressão",
             // estilo:"azul",
             // teste:true
-          cor:'',
-          posX:0,
-          posY:0
+          // cor:'',
+          // posX:0,
+          // posY:0
+          // msg:'',
+          // cliques:0,
+          // formulario:'',
+          // teclas:''
         },
         methods:{
             // somar:function somar(){ // Convencional
@@ -123,13 +155,32 @@
           //   console.log(e);
             
           //  }
-          mudarCor(c){
-            this.cor=c;
+          // mudarCor(c){
+          //   this.cor=c;
             
-          },
-          coordenadas(e){
-            this.posX=e.clientX;
-            this.posY=e.clientY;
+          // },
+          // coordenadas(e){
+          //   this.posX=e.clientX;
+          //   this.posY=e.clientY;
+          // }
+          // prevenirComportamentoPadrao(){
+            
+          //   this.msg="Comportamento padrao ativado"
+          // },
+          // executarUmaVez(){
+          //   this.cliques++;
+          // },
+          // prevenirUmaVez(){
+          //   this.formulario="Prevenindo o comportamento padrão"
+          // },
+          // capturandoTeclas(event){
+          //   this.teclas += event.key;
+          // }
+          selecionarElementoFilho(){
+            //console.log(inputTexto.value);
+            //console.log(opcoes.value);
+            //console.log(paragrafo.style.color);
+            console.log(bloco.innerHTML);
           }
         }
       }); //vm = ViewModel
