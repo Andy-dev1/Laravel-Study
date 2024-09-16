@@ -82,7 +82,7 @@
       <hr>
       <input type="text" name="" id="" @keyup.x.c="capturandoTeclas($event)">
       <p>Teclas: {{teclas}}</p> -->
-      <input type="text" name="" id="inputTexto">
+      <!-- <input type="text" name="" id="inputTexto">
       <button @click="selecionarElementoFilho()">Botão</button>
       <select name="" id="opcoes">
         <option value="A">Opcao 1</option>
@@ -94,13 +94,41 @@
       <br>
       <p id="paragrafo" style="color:red">Parágrafo</p>
       <button @click="selecionarElementoFilho()">Botão</button>
-      <div id="bloco">Conteúdo interno da div</div>
+      <div id="bloco">Conteúdo interno da div</div> -->
+      <!-- <button @click="exibirSaldo=!exibirSaldo">
+        <span v-if="!exibirSaldo">Exibir Saldo</span>
+        <span v-if="exibirSaldo">Ocultar Saldo</span>
+      </button>
+      <p>Saldo: <span v-if="exibirSaldo">R$ {{saldo}}</span></p>
+      <hr>
+
+      Idade: <input type="text" name="" id="inputIdade" @blur="setIdade()">
+      <p v-if="idade < 18"> Menor de idade</p>
+      <p v-else> Maior de idade</p>
+      <hr>
+
+      Nota: <input type="text" name="" id="inputNota" @blur="setNota()">
+      <p v-if="nota==''">Digite a nota do aluno</p>
+      <p v-else-if="nota >= 7 && nota<=10">Aluno aprovado</p>
+      <p v-else-if="nota >= 5 && nota<7">Aluno em recuperação</p>
+      <p v-else-if="nota >= 0 && nota<5">Aluno reprovado</p>
+      <p v-else>Nota informada é invalida</p> -->
+      <!-- <p @mouseover="exibirTextoAjuda=true" @mouseout="exibirTextoAjuda=false">Exemplo tooltip</p>
+      <div v-show="exibirTextoAjuda">
+        <h3>Título texto ajuda</h3>
+        <p>Conteudo texto ajuda</p>
+      </div> -->
+      <!-- <div v-html="elementosHTML">
+        
+      </div> -->
+      <div v-text="elementosHTML"></div>
     </div>
 
     <script>
       const vm = new Vue({
         el: "#app", //# id e . class
         data: {
+            
             // n1:10,
             // n2:5
         //   //Variaveis reativas
@@ -132,6 +160,12 @@
           // cliques:0,
           // formulario:'',
           // teclas:''
+          // saldo:4570.17,
+          // exibirSaldo:false,
+          // idade:0,
+          // nota:0
+          // exibirTextoAjuda:false
+          elementosHTML:'<p><b>Site</b></p><a href="https://www.andrelemos.site/">Andy</a>'
         },
         methods:{
             // somar:function somar(){ // Convencional
@@ -176,12 +210,21 @@
           // capturandoTeclas(event){
           //   this.teclas += event.key;
           // }
-          selecionarElementoFilho(){
-            //console.log(inputTexto.value);
-            //console.log(opcoes.value);
-            //console.log(paragrafo.style.color);
-            console.log(bloco.innerHTML);
-          }
+          // selecionarElementoFilho(){
+          //   //console.log(inputTexto.value);
+          //   //console.log(opcoes.value);
+          //   //console.log(paragrafo.style.color);
+          //   console.log(bloco.innerHTML);
+          // }
+          // setIdade(){
+          //   this.idade=inputIdade.value;
+            
+          // },
+          // setNota(){
+          //   this.nota=inputNota.value;
+          //   console.log(this.nota);
+            
+          // }
         }
       }); //vm = ViewModel
     </script>
