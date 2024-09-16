@@ -6,43 +6,46 @@
     <script src="./vue.js"></script>
     <title>Document</title>
     <style>
-        .verde{
-            background-color:green
-        }
-        .branco{
-            background-color:white
-        }
-        .azul{
-            background-color:blue
-        }
-        .vermelho{
-            background-color:red
-        }
-        .negrito{
-            font-weight: bold;
-        }
-        .borda{
-          border:1px solid
-        }
+      .verde {
+        background-color: green;
+      }
+      .branco {
+        background-color: white;
+      }
+      .azul {
+        background-color: blue;
+      }
+      .vermelho {
+        background-color: red;
+      }
+      .negrito {
+        font-weight: bold;
+      }
+      .borda {
+        border: 1px solid;
+      }
 
-        .div-principal{
-          width: 200px;
-          height: 200px;
-        }
-        .div-comum{
-          width: 50px;
-          height: 50px;
-          display: inline-block;
-        }
+      .div-principal {
+        width: 200px;
+        height: 200px;
+      }
+      .div-comum {
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
     <div id="app">
-        <!-- {{somar()}}<br>
+      <ul>
+        <li v-for="n in 10">{{n}}</li>
+      </ul>
+      <!-- {{somar()}}<br>
         {{subtrair()}}<br>
         {{multiplicar()}}<br>
         {{dividir()}}<br> -->
-       
+
       <!-- {{mensagem}}<br /> -->
       <!-- Valor total: {{valorTotal}}<br />
       Logado: {{logado}}<br />
@@ -121,38 +124,75 @@
       <!-- <div v-html="elementosHTML">
         
       </div> -->
-      <div v-text="elementosHTML"></div>
+      <!-- <div v-text="elementosHTML"></div> -->
+      <!-- <p v-once>Saldo inicial: {{saldo}}</p>
+       <p>Saldo atualizado: {{saldo}}</p>
+       <input type="text" name="" id="valor">
+       <button @click="creditar()">Creditar</button>
+       <button @click="debitar()">Deditar</button> -->
+      <ul>
+        <li v-for="(curso, key) in cursos" v-text="key +' - '+ curso"></li>
+      </ul>
+      <hr>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="({titulo,descricao},chave) in cursos2">
+            <td>{{chave}}</td>
+            <td>{{titulo}}</td>
+            <td>{{descricao}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <ul>
+        <li v-for="p in publicacoes" style="border: solid 1px; margin-bottom: 10px;" :key="p.id">
+          <div>
+            {{p.publicacao}}
+            <hr>
+            <input type="text">
+          </div>
+          
+        </li>
+      </ul>
+      <button @click="misturarArray()">Misturar publicações</button>
     </div>
 
     <script>
       const vm = new Vue({
         el: "#app", //# id e . class
         data: {
-            
-            // n1:10,
-            // n2:5
-        //   //Variaveis reativas
-        //   mensagem: "Primeiro template controlado pelo Vue", //string
-        //   valorTotal: 150.7,
-        //   logado: false,
-        //   hobbies: ["Dormir", "Video games", "Trilhas", "Correr"],
-        //   perfil: {
-        //     nome: "Jorge",
-        //     site: "jorge.com.br",
-        //     idade: 33,
-        //     cursos: [
-        //       { nome: "Laravel", cargaHoraria: "50 horas" },
-        //       { nome: "Bancos de Dados Relacionais", cargaHoraria: "40 horas" },
-        //     ],
-        //   },
-            // site:'https://www.andrelemos.site/',
-            // cor:"verde",
-            // instrucaoDePreenchimento:"Placeholder- v-bind",
-            // valor:"Entendendo a diretiva v-bind",
-            // check:true
-            // mensagem:"Expressão",
-            // estilo:"azul",
-            // teste:true
+          //saldo:1100
+          // n1:10,
+          // n2:5
+          //   //Variaveis reativas
+          //   mensagem: "Primeiro template controlado pelo Vue", //string
+          //   valorTotal: 150.7,
+          //   logado: false,
+          //   hobbies: ["Dormir", "Video games", "Trilhas", "Correr"],
+          //   perfil: {
+          //     nome: "Jorge",
+          //     site: "jorge.com.br",
+          //     idade: 33,
+          //     cursos: [
+          //       { nome: "Laravel", cargaHoraria: "50 horas" },
+          //       { nome: "Bancos de Dados Relacionais", cargaHoraria: "40 horas" },
+          //     ],
+          //   },
+          // site:'https://www.andrelemos.site/',
+          // cor:"verde",
+          // instrucaoDePreenchimento:"Placeholder- v-bind",
+          // valor:"Entendendo a diretiva v-bind",
+          // check:true
+          // mensagem:"Expressão",
+          // estilo:"azul",
+          // teste:true
           // cor:'',
           // posX:0,
           // posY:0
@@ -165,40 +205,57 @@
           // idade:0,
           // nota:0
           // exibirTextoAjuda:false
-          elementosHTML:'<p><b>Site</b></p><a href="https://www.andrelemos.site/">Andy</a>'
+          //elementosHTML:'<p><b>Site</b></p><a href="https://www.andrelemos.site/">Andy</a>'
+          cursos: [
+            "Laravel",
+            "Web Completo",
+            "Banco de Dados",
+            "Solid",
+            "Angular",
+          ],
+          cursos2: {
+            1000: {
+              titulo: "Laravel",
+              descricao: "Domine o framework PHP mais poderoso do mundo",
+            },
+            1001: {
+              titulo: "Banco de dados",
+              descricao: "Aprenda os principais banco de dados",
+            },
+          },
+          publicacoes:[
+            {id:1,publicacao:'Publicações 1'},
+            {id:2,publicacao:'Publicações 2'},
+            {id:3,publicacao:'Publicações 3'}
+          ]
         },
-        methods:{
-            // somar:function somar(){ // Convencional
-            //     return this.n1+this.n2;
-            // },
-            // subtrair:function(){ //Anônima
-            //     return this.n1-this.n2;
-            // },
-            // multiplicar:()=>{ //arrow function
-                
-            //     return this.n1*this.n2; // Contexto léxico
-            // },
-            // dividir(){//forma enxuta de definir os pares de chave/valor
-            //     return this.n1/this.n2;
-            // },
+        methods: {
+          // somar:function somar(){ // Convencional
+          //     return this.n1+this.n2;
+          // },
+          // subtrair:function(){ //Anônima
+          //     return this.n1-this.n2;
+          // },
+          // multiplicar:()=>{ //arrow function
+          //     return this.n1*this.n2; // Contexto léxico
+          // },
+          // dividir(){//forma enxuta de definir os pares de chave/valor
+          //     return this.n1/this.n2;
+          // },
           //  imprimirTexto(t){
           //   console.log(t);
-            
           //  },
           //  mensagemAlerta(e){
           //   console.log(e);
-            
           //  }
           // mudarCor(c){
           //   this.cor=c;
-            
           // },
           // coordenadas(e){
           //   this.posX=e.clientX;
           //   this.posY=e.clientY;
           // }
           // prevenirComportamentoPadrao(){
-            
           //   this.msg="Comportamento padrao ativado"
           // },
           // executarUmaVez(){
@@ -218,14 +275,26 @@
           // }
           // setIdade(){
           //   this.idade=inputIdade.value;
-            
           // },
           // setNota(){
           //   this.nota=inputNota.value;
           //   console.log(this.nota);
-            
           // }
-        }
+          // creditar(){
+          //   this.saldo+=parseFloat(valor.value);
+          // },
+          // debitar(){
+          //   this.saldo-=parseFloat(valor.value);
+          // }
+          misturarArray(){
+            let misturado=[];
+            misturado[0]=this.publicacoes[2];
+            misturado[1]=this.publicacoes[0];
+            misturado[2]=this.publicacoes[1];
+            
+            this.publicacoes=misturado;
+          }
+        },
       }); //vm = ViewModel
     </script>
   </body>
