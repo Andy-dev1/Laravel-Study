@@ -199,9 +199,9 @@
       <hr>
       <h4>Pacientes cadastrados</h4>
       <p v-for="p in pacientes">{{p.nome}}</p> -->
-      {{paciente}}<br>
+      <!-- {{paciente}}<br> -->
       <!-- <input type="text" name="" id="" :value="paciente" @keyup="paciente=$event.target.value;"> -->
-      <input type="text" name="" id="" v-model="paciente">
+      <!-- <input type="text" name="" id="" v-model="paciente">
       <hr>
       
       <input type="radio" name="" id="" value="f" v-model="sexo"> Feminino
@@ -225,7 +225,12 @@
       <hr>
       <textarea name="" id="" v-model="diagnostico"></textarea>
       <br>
-      {{diagnostico}}
+      {{diagnostico}} -->
+      <span>Paciente: {{paciente}}</span><input type="text" name="" id="" v-model="paciente">
+      <br>
+      <ul>
+        <li v-for="p in lista">{{p.nome}} - {{p.idade}}</li>
+      </ul>
     </div>
 
     <script>
@@ -299,11 +304,21 @@
           // ]
           //saudacao:true
           // pacientes: [],
-          paciente:'João da Silva',
-          sexo:'',
-          plano:'',
-          doencas:[],
-          diagnostico:''
+          // paciente:'João da Silva',
+          // sexo:'',
+          // plano:'',
+          // doencas:[],
+          // diagnostico:''
+          paciente:'',
+          pacientes:[
+            {nome:'Jorge Sant Ana',idade:32},
+            {nome:'João Santos',idade:45},
+            {nome:'José Augusto',idade:18},
+            {nome:'Junior Silva',idade:20},
+            {nome:'Julho Nogueira',idade:50},
+            
+          ],
+          lista:[]
         },
         methods: {
           // somar:function somar(){ // Convencional
@@ -388,9 +403,9 @@
           //     plano: inputPlano.value,
           //   });
           // },
-          setPaciente(event){
-            this.paciente=event.target.value;
-          }
+          // setPaciente(event){
+          //   this.paciente=event.target.value;
+          // }
         },
         computed:{
           // ultimoPaciente(){
@@ -407,6 +422,13 @@
           // pacientesPlanoOuro(){
           //   return this.pacientes.filter((paciente)=>paciente.plano=='Ouro')
           // }
+        },
+        watch:{
+          paciente(valorNovo){
+            console.log(valorNovo);
+            this.lista=this.pacientes.filter(p=>p.nome.match(valorNovo));
+            
+          }
         }
       }); //vm = ViewModel
     </script>
