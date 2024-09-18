@@ -177,27 +177,55 @@
       <template v-for="n in 10">
         <p>2 x {{n}} = {{2*n}}</p>
       </template> -->
-      <h4>Adicionar pacientes</h4>
+      <!-- <h4>Adicionar pacientes</h4>
       <span>Nome: </span><input type="text" name="" id="inputNome" /><br />
       <span>Idade: </span><input type="text" name="" id="inputIdade" /><br />
       <span>Plano: </span><input type="text" name="" id="inputPlano" /><br />
       <button @click="adicionarPaciente()">Adicionar</button>
-      <hr>
+      <hr> -->
 
-      <h4>Último paciente cadastrado</h4>
-      <p v-if="pacientes.length > 0">
-        Paciente {{pacientes[pacientes.length-1].nome}},
+      <!-- <h4>Último paciente cadastrado</h4>
+      <p v-if="pacientes.length > 0"> -->
+        <!-- Paciente {{pacientes[pacientes.length-1].nome}},
         Idade {{pacientes[pacientes.length-1].idade}},
-        Plano {{pacientes[pacientes.length-1].plano}}
-      </p>
+        Plano {{pacientes[pacientes.length-1].plano}} -->
+        <!-- {{ultimoPaciente}}
+      </p> -->
 
-      <hr>
+      <!-- <hr>
       <h4>Pacientes do plano Ouro</h4>
-      <p v-for="p in pacientes">{{p.plano == 'Ouro'?p.nome:''}}</p>
+      <p v-for="p in pacientesPlanoOuro">{{p.nome}}</p>
 
       <hr>
       <h4>Pacientes cadastrados</h4>
-      <p v-for="p in pacientes">{{p.nome}}</p>
+      <p v-for="p in pacientes">{{p.nome}}</p> -->
+      {{paciente}}<br>
+      <!-- <input type="text" name="" id="" :value="paciente" @keyup="paciente=$event.target.value;"> -->
+      <input type="text" name="" id="" v-model="paciente">
+      <hr>
+      
+      <input type="radio" name="" id="" value="f" v-model="sexo"> Feminino
+      <input type="radio" name="" id="" value="m" v-model="sexo"> Masculino
+      <br>
+      {{sexo}}
+      <hr>
+      <select name="" id="" v-model="plano">
+        <option value="" disabled> Selecione um plano</option>
+        <option value="1">Básico 1</option>
+        <option value="2">Básico 2</option>
+        <option value="3">Básico 3</option>
+      </select>
+      <br>
+      {{plano}}
+      <hr>
+      <input type="checkbox" name="" id="" value="100" v-model="doencas">Asma
+      <input type="checkbox" name="" id="" value="101" v-model="doencas">Diabetes
+      <input type="checkbox" name="" id="" value="102" v-model="doencas">Rinite
+      <br> {{doencas}}
+      <hr>
+      <textarea name="" id="" v-model="diagnostico"></textarea>
+      <br>
+      {{diagnostico}}
     </div>
 
     <script>
@@ -270,7 +298,12 @@
           //   {id:3,publicacao:'Publicações 3'}
           // ]
           //saudacao:true
-          pacientes: [],
+          // pacientes: [],
+          paciente:'João da Silva',
+          sexo:'',
+          plano:'',
+          doencas:[],
+          diagnostico:''
         },
         methods: {
           // somar:function somar(){ // Convencional
@@ -348,14 +381,33 @@
           // modificarElemento(){
           //   this.$set(this.comentarios,1,{id:4,comentario:'Comentário atualizado'})
           // }
-          adicionarPaciente() {
-            this.pacientes.push({
-              nome: inputNome.value,
-              idade: inputIdade.value,
-              plano: inputPlano.value,
-            });
-          },
+          // adicionarPaciente() {
+          //   this.pacientes.push({
+          //     nome: inputNome.value,
+          //     idade: inputIdade.value,
+          //     plano: inputPlano.value,
+          //   });
+          // },
+          setPaciente(event){
+            this.paciente=event.target.value;
+          }
         },
+        computed:{
+          // ultimoPaciente(){
+          //   let key = this.pacientes.length - 1;
+          //   let txt='';
+
+          //   txt += 'Paciente '+this.pacientes[key].nome;
+          //   txt += ', Idade '+this.pacientes[key].idade;
+          //   txt += ', Plano '+this.pacientes[key].plano;
+
+          //   return txt.toUpperCase();
+       
+          // },
+          // pacientesPlanoOuro(){
+          //   return this.pacientes.filter((paciente)=>paciente.plano=='Ouro')
+          // }
+        }
       }); //vm = ViewModel
     </script>
   </body>
