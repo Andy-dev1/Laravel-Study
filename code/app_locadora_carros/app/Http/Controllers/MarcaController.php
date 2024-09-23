@@ -44,8 +44,11 @@ class MarcaController extends Controller
         
         $request->validate($this->marca->rules(),$this->marca->feedback());
         //stateless
-
-        $marca = $this->marca->create($request->all());
+        $image = $request->file('imagem');
+        $image->store('imagens','public');
+        dd('Upload de arquivos');
+        //dd($request->imagem);
+       // $marca = $this->marca->create($request->all());
         return response()->json($marca,201);
     }
 
@@ -86,6 +89,27 @@ class MarcaController extends Controller
         if ($marca === null) {
             return response()->json(['erro' => 'Impossivel realizar a atualização.'],404);
         }
+        if($request->method()==='PATCH'){
+           
+
+            $regrasDinamicas=array();
+           
+            //percorrendo todas as regras definidas no Model
+            foreach($marca->rules() as $input => $regra){
+                // $teste.='Input: '.$input.' | Regra: '.$regra.'<br>';
+
+                //Coletar as regras parciais
+                if(array_key_exists($input,$request->all())){
+                    $regrasDinamicas[$input]=$regra;
+                }
+            }
+            // dd($regrasDinamicas);
+            $request->validate($regrasDinamicas,$marca->feedback());
+        }else{
+            $request->validate($marca->rules(),$marca->feedback());
+        }
+
+        
         $marca->update($request->all());
         return response()->json($marca,200);
     }
