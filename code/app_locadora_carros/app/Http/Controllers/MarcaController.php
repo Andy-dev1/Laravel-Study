@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 
@@ -44,11 +45,19 @@ class MarcaController extends Controller
         
         $request->validate($this->marca->rules(),$this->marca->feedback());
         //stateless
-        $image = $request->file('imagem');
-        $image->store('imagens','public');
-        dd('Upload de arquivos');
+        $imagem = $request->file('imagem');
+        $imagem_urn=$imagem->store('imagens','public');
+        //dd($imagem_urn);
         //dd($request->imagem);
-       // $marca = $this->marca->create($request->all());
+        $marca = $this->marca->create([
+            'nome'=>$request->nome,
+            'imagem'=>$imagem_urn
+        ]);
+
+        // $marca->nome=$request->nome;
+        // $marca->imagem=$imagem_urn;
+        // $marca->save();
+
         return response()->json($marca,201);
     }
 
@@ -109,8 +118,21 @@ class MarcaController extends Controller
             $request->validate($marca->rules(),$marca->feedback());
         }
 
+        //Remove o arquivo antigo caso o novo arquivo tenha siudo enviado
+        if($request->file('imagem')){
+            Storage::disk('public')->delete($marca->imagem);
+        }
+
+        $imagem = $request->file('imagem');
+        $imagem_urn=$imagem->store('imagens','public');
         
-        $marca->update($request->all());
+       
+        $marca->update([
+            'nome'=>$request->nome,
+            'imagem'=>$imagem_urn
+        ]);
+
+
         return response()->json($marca,200);
     }
 
@@ -124,6 +146,12 @@ class MarcaController extends Controller
         if ($marca === null) {
             return response()->json(['erro' => 'Impossivel realizar a exclusao.'],404);
         }
+
+         //Remove o arquivo antigo caso o novo arquivo tenha siudo enviado
+         
+        Storage::disk('public')->delete($marca->imagem);
+        
+
         $marca->delete();
         // $marca->delete();
         return response()->json(['msg' => 'A marca foi removida com sucesso!'],200);
