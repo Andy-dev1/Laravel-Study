@@ -32,6 +32,7 @@ class ModeloController extends Controller
 
         if($request->has('filtro')){
             //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
+            //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
             $filtros=explode(';',$request->filtro);
             foreach($filtros as $key=>$condicao){
                 $c=explode(':',$condicao);

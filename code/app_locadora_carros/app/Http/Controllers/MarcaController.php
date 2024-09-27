@@ -18,10 +18,42 @@ class MarcaController extends Controller
 
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $marcas=array();
+
+        if($request->has('atributos_modelos')){
+            $atributos_modelos=$request->get('atributos_modelos');
+            $marcas=$this->marca->with('modelos:id,'.$atributos_modelos);
+
+        }else{
+            $marcas=$this->marca->with('modelos');
+        }
+
+        if($request->has('filtro')){
+            //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
+            //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
+            $filtros=explode(';',$request->filtro);
+            foreach($filtros as $key=>$condicao){
+                $c=explode(':',$condicao);
+                $marcas=$marcas->where($c[0],$c[1],$c[2]);
+            }
+            
+        }
+
+        if($request->has('atributos')){
+            $atributos=$request->get('atributos');
+            
+            // $atributos=explode(',',$atributos);
+            
+            $marcas=$marcas->selectRaw($atributos)->get();
+
+        }else{
+            $marcas=$marcas->get();
+        }
+
         //$marcas = Marca::all();
-        $marcas = $this->marca->with('modelos')->get();
+        //$marcas = $this->marca->with('modelos')->get();
         return response()->json($marcas,200);
     }
 
