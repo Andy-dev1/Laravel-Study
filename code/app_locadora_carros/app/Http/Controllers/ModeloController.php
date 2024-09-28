@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modelo;
+use App\Repositories\ModeloRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,39 +21,64 @@ class ModeloController extends Controller
      */
     public function index(Request $request)
     {
-        //dd($request->get('atributos'));
-        $modelos=array();
-        if($request->has('atributos_marca')){
-            $atributos_marca=$request->get('atributos_marca');
-            $modelos=$this->modelo->with('marca:id,'.$atributos_marca);
+        $modeloRepository = new ModeloRepository($this->modelo);
 
-        }else{
-            $modelos=$this->modelo->with('marca');
+        if ($request->has('atributos_marca')) {
+            $atributos_marca = 'marca:id,' . $request->get('atributos_marca');
+
+
+            $modeloRepository->selectAtributosRegistrosRelacionados( $atributos_marca);
+        } else {
+
+
+            $modeloRepository->selectAtributosRegistrosRelacionados('marca');
         }
 
-        if($request->has('filtro')){
-            //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
-            //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
-            $filtros=explode(';',$request->filtro);
-            foreach($filtros as $key=>$condicao){
-                $c=explode(':',$condicao);
-                $modelos=$modelos->where($c[0],$c[1],$c[2]);
-            }
-            
+        if ($request->has('filtro')) {
+
+            $modeloRepository->filtro($request->filtro);
+        };
+
+
+        if ($request->has('atributos')) {
+
+
+            $modeloRepository->selectAtributos($request->atributos);
         }
 
-        if($request->has('atributos')){
-            $atributos=$request->get('atributos');
-            
-            // $atributos=explode(',',$atributos);
-            
-            $modelos=$modelos->selectRaw($atributos)->get();
+        // //dd($request->get('atributos'));
+        // $modelos=array();
+        // if($request->has('atributos_marca')){
+        //     $atributos_marca=$request->get('atributos_marca');
+        //     $modelos=$this->modelo->with('marca:id,'.$atributos_marca);
 
-        }else{
-            $modelos=$modelos->get();
-        }
-        //$this->modelo->with('marca')->get()
-        return response()->json($modelos, 200);
+        // }else{
+        //     $modelos=$this->modelo->with('marca');
+        // }
+
+        // if($request->has('filtro')){
+        //     //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
+        //     //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
+        //     $filtros=explode(';',$request->filtro);
+        //     foreach($filtros as $key=>$condicao){
+        //         $c=explode(':',$condicao);
+        //         $modelos=$modelos->where($c[0],$c[1],$c[2]);
+        //     }
+            
+        // }
+
+        // if($request->has('atributos')){
+        //     $atributos=$request->get('atributos');
+            
+        //     // $atributos=explode(',',$atributos);
+            
+        //     $modelos=$modelos->selectRaw($atributos)->get();
+
+        // }else{
+        //     $modelos=$modelos->get();
+        // }
+        // //$this->modelo->with('marca')->get()
+        return response()->json($modeloRepository->getResultado(), 200);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Marca;
+use App\Repositories\MarcaRepository;
 use Illuminate\Http\Request;
 
 
@@ -20,41 +21,67 @@ class MarcaController extends Controller
      */
     public function index(Request $request)
     {
-        $marcas=array();
 
-        if($request->has('atributos_modelos')){
-            $atributos_modelos=$request->get('atributos_modelos');
-            $marcas=$this->marca->with('modelos:id,'.$atributos_modelos);
+        $marcaRepository = new MarcaRepository($this->marca);
 
-        }else{
-            $marcas=$this->marca->with('modelos');
+        if ($request->has('atributos_modelos')) {
+            $atributos_modelos = 'modelos:id,' . $request->get('atributos_modelos');
+
+
+            $marcaRepository->selectAtributosRegistrosRelacionados($atributos_modelos);
+        } else {
+
+
+            $marcaRepository->selectAtributosRegistrosRelacionados('modelos');
         }
 
-        if($request->has('filtro')){
-            //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
-            //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
-            $filtros=explode(';',$request->filtro);
-            foreach($filtros as $key=>$condicao){
-                $c=explode(':',$condicao);
-                $marcas=$marcas->where($c[0],$c[1],$c[2]);
-            }
-            
+        if ($request->has('filtro')) {
+
+            $marcaRepository->filtro($request->filtro);
+        };
+
+
+        if ($request->has('atributos')) {
+
+
+            $marcaRepository->selectAtributos($request->atributos);
         }
 
-        if($request->has('atributos')){
-            $atributos=$request->get('atributos');
-            
-            // $atributos=explode(',',$atributos);
-            
-            $marcas=$marcas->selectRaw($atributos)->get();
 
-        }else{
-            $marcas=$marcas->get();
-        }
+        //----------------------------------------------------------
+        // $marcas = array();
+
+        // if ($request->has('atributos_modelos')) {
+        //     $atributos_modelos = $request->get('atributos_modelos');
+        //     $marcas = $this->marca->with('modelos:id,' . $atributos_modelos);
+        // } else {
+        //     $marcas = $this->marca->with('modelos');
+        // }
+
+        // if ($request->has('filtro')) {
+        //     //localhost:8000/api/modelo?atributos=id,nome,marca_id&atributos_marca=nome&filtro=abs:=:0;nome:like:Ford%;numero_portas:=:4
+        //     //localhost:8000/api/modelo?atributos=id,nome,marca_id,numero_portas,abs&atributos_marca=nome&filtro=nome:like:%Sedan%;numero_portas:=:4;abs:=:1
+        //     $filtros = explode(';', $request->filtro);
+        //     foreach ($filtros as $key => $condicao) {
+        //         $c = explode(':', $condicao);
+        //         $marcas = $marcas->where($c[0], $c[1], $c[2]);
+        //     }
+        // }
+
+        // if ($request->has('atributos')) {
+        //     $atributos = $request->get('atributos');
+
+        //     // $atributos=explode(',',$atributos);
+
+        //     $marcas = $marcas->selectRaw($atributos)->get();
+        // } else {
+        //     $marcas = $marcas->get();
+        // }
 
         //$marcas = Marca::all();
         //$marcas = $this->marca->with('modelos')->get();
-        return response()->json($marcas,200);
+        //return response()->json($marcas, 200);
+        return response()->json($marcaRepository->getResultado(), 200);
     }
 
     /**
@@ -74,23 +101,23 @@ class MarcaController extends Controller
         //nome
         //imagem
 
-        
-        $request->validate($this->marca->rules(),$this->marca->feedback());
+
+        $request->validate($this->marca->rules(), $this->marca->feedback());
         //stateless
         $imagem = $request->file('imagem');
-        $imagem_urn=$imagem->store('imagens','public');
+        $imagem_urn = $imagem->store('imagens', 'public');
         //dd($imagem_urn);
         //dd($request->imagem);
         $marca = $this->marca->create([
-            'nome'=>$request->nome,
-            'imagem'=>$imagem_urn
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
         ]);
 
         // $marca->nome=$request->nome;
         // $marca->imagem=$imagem_urn;
         // $marca->save();
 
-        return response()->json($marca,201);
+        return response()->json($marca, 201);
     }
 
     /**
@@ -102,7 +129,7 @@ class MarcaController extends Controller
         if ($marca === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
         }
-        return response()->json($marca,200);
+        return response()->json($marca, 200);
     }
 
     /**
@@ -128,40 +155,40 @@ class MarcaController extends Controller
         $marca = $this->marca->find($id);
 
         if ($marca === null) {
-            return response()->json(['erro' => 'Impossivel realizar a atualização.'],404);
+            return response()->json(['erro' => 'Impossivel realizar a atualização.'], 404);
         }
-        if($request->method()==='PATCH'){
-           
+        if ($request->method() === 'PATCH') {
 
-            $regrasDinamicas=array();
-           
+
+            $regrasDinamicas = array();
+
             //percorrendo todas as regras definidas no Model
-            foreach($marca->rules() as $input => $regra){
+            foreach ($marca->rules() as $input => $regra) {
                 // $teste.='Input: '.$input.' | Regra: '.$regra.'<br>';
 
                 //Coletar as regras parciais
-                if(array_key_exists($input,$request->all())){
-                    $regrasDinamicas[$input]=$regra;
+                if (array_key_exists($input, $request->all())) {
+                    $regrasDinamicas[$input] = $regra;
                 }
             }
             // dd($regrasDinamicas);
-            $request->validate($regrasDinamicas,$marca->feedback());
-        }else{
-            $request->validate($marca->rules(),$marca->feedback());
+            $request->validate($regrasDinamicas, $marca->feedback());
+        } else {
+            $request->validate($marca->rules(), $marca->feedback());
         }
 
         //Remove o arquivo antigo caso o novo arquivo tenha siudo enviado
-        if($request->file('imagem')){
+        if ($request->file('imagem')) {
             Storage::disk('public')->delete($marca->imagem);
         }
 
         $imagem = $request->file('imagem');
-        $imagem_urn=$imagem->store('imagens','public');
-        
+        $imagem_urn = $imagem->store('imagens', 'public');
+
         //preencher o objeto marca com os dados do request
-        
+
         $marca->fill($request->all());
-        $marca->imagem=$imagem_urn;
+        $marca->imagem = $imagem_urn;
 
         $marca->save();
 
@@ -171,7 +198,7 @@ class MarcaController extends Controller
         // ]);
 
 
-        return response()->json($marca,200);
+        return response()->json($marca, 200);
     }
 
     /**
@@ -182,16 +209,16 @@ class MarcaController extends Controller
         $marca = $this->marca->find($id);
 
         if ($marca === null) {
-            return response()->json(['erro' => 'Impossivel realizar a exclusao.'],404);
+            return response()->json(['erro' => 'Impossivel realizar a exclusao.'], 404);
         }
 
-         //Remove o arquivo antigo caso o novo arquivo tenha siudo enviado
-         
+        //Remove o arquivo antigo caso o novo arquivo tenha siudo enviado
+
         Storage::disk('public')->delete($marca->imagem);
-        
+
 
         $marca->delete();
         // $marca->delete();
-        return response()->json(['msg' => 'A marca foi removida com sucesso!'],200);
+        return response()->json(['msg' => 'A marca foi removida com sucesso!'], 200);
     }
 }
