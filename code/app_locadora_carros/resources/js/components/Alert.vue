@@ -2,8 +2,9 @@
     <div :class="estilo" role="alert">
         {{titulo}}
         <hr>
-        <span v-if="detalhes.data.message">{{detalhes.data.message}}</span>
-        <span v-if="detalhes.data.id">{{'ID do registro: '+detalhes.data.id}}</span>
+        <p>{{detalhes.mensagem}}</p>
+        <!-- <span v-if="detalhes.data.message">{{detalhes.data.message}}</span> -->
+        <!-- <span v-if="detalhes.data.id">{{'ID do registro: '+detalhes.data.id}}</span> -->
     </div>
 </template>
 

@@ -1,37 +1,35 @@
 <template>
     <table class="table table-hover">
         <thead>
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            
+            <tr >
+                <th scope="col" v-for="t,key in titulos" :key="key" class="text-uppercase">{{t}}</th>
+                
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+            <tr v-for="obj in dados" :key="obj.id">
+                <td v-for="valor, chave in obj" :key="chave" >
+                    <p v-if="titulos.includes(chave)">
+                        <span v-if="chave == 'imagem'">
+                            <img :src="'/storage/' + valor" width="40" height="40">
+                        </span>
+                    
+                        <span v-else>
+                            {{ valor }}
+                        </span>
+                    </p>
+                </td>
             </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
+            
         </tbody>
+       
     </table>
 </template>
 
 <script>
     export default {
-      
+      props:['dados','titulos'],
+     
     }
 </script>

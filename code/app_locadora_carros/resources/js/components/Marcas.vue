@@ -27,7 +27,7 @@
                 <!-- #region relacao de marcas -->
                 <card-component titulo="Relação de marcas">
                     <template v-slot:conteudo>
-                        <table-component></table-component>
+                        <table-component :dados="marcas" :titulos="['id','nome','imagem']"></table-component>
                     </template>
                     <template v-slot:rodape>
                         <button type="button" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
@@ -74,7 +74,8 @@
                 nomeMarca:'',
                 arquivoImagem:[],
                 transacaoStatus: '',
-                transacaoDetalhes:[]
+                transacaoDetalhes:{},
+                marcas:[]
             }
         },
         computed:{
@@ -88,7 +89,22 @@
             }
         },
         methods:{
-            
+            carregarLista(){
+                let config={
+                    headers:{
+                        
+                        'Accept':'application/json',
+                        'Authorization': this.token
+                    }
+                }
+
+                axios.get(this.urlBase,config).then(response=>{
+                    this.marcas=response.data;
+                    // console.log(this.marcas);
+                }).catch(errors=>{
+                    console.log(errors);
+                })
+            },
             carregarImagem(e){
                 this.arquivoImagem=e.target.files
             },
@@ -109,16 +125,24 @@
                 axios.post(this.urlBase,formData,config)
                     .then(response=>{
                         this.transacaoStatus='adicionado'
-                        this.transacaoDetalhes=response
+                        this.transacaoDetalhes={
+                            mensagem: 'ID do registro: '+ response.data.id
+                        }
                         console.log(response);
                     })
                     .catch(errors=>{
                         this.transacaoStatus='erro'
-                        this.transacaoDetalhes=errors.response;
+                        this.transacaoDetalhes={
+                            mensagem: errors.response.data.message,
+                            dados:errors.response.data.errors
+                        };
                         //console.log(errors.response.data.message);
                         
                     })
             }
+        },
+        mounted(){
+            this.carregarLista()
         }
     }
 </script>
