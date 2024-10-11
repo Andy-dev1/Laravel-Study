@@ -89,7 +89,7 @@
             </div>
         </nav>
         @auth
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" class=" px-4 py-2 bg-light">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{Route::currentRouteName()}}</li>

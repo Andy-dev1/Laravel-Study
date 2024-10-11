@@ -27,7 +27,7 @@
                 <!-- #region relacao de marcas -->
                 <card-component titulo="Relação de marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" :titulos="{
+                        <table-component v-if="marcas.data" :dados="marcas.data" :titulos="{
                             id: {titulo:'ID',tipo:'text'},
                             nome: {titulo:'Nome',tipo:'text'},
                             imagem: {titulo:'Imagem',tipo:'imagem'},
@@ -35,7 +35,19 @@
                         }"></table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button type="button" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
+                        <div class="row">
+                            <div class="col-10">
+                                <paginate-component>
+                                   
+                                    <li v-for="l,key in marcas.links" :key="key" class="page-item">
+                                        <a class="page-link" href="#" v-html="l.label"></a>
+                                    </li>
+                                </paginate-component>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
                 <!-- #endregion relacao de marcas -->
@@ -58,14 +70,16 @@
                         <input type="file" class="form-control-file" id="novoImagem" aria-describedby="novoImagemHelp" placeholder="Selecione uma imagem" @change="carregarImagem($event)">
                     </input-container-component>
                     {{arquivoImagem}}
+                    
                 </div>
             </template>
             <template v-slot:rodape>
+                
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-primary" @click="salvar()">Salvar</button>
             </template>
         </modal-component>
-        
+       
 
        
     </div>
@@ -80,7 +94,7 @@
                 arquivoImagem:[],
                 transacaoStatus: '',
                 transacaoDetalhes:{},
-                marcas:[]
+                marcas:{data:[]}
             }
         },
         computed:{
@@ -104,7 +118,7 @@
                 }
 
                 axios.get(this.urlBase,config).then(response=>{
-                    this.marcas=response.data;
+                    this.marcas=response.data
                     // console.log(this.marcas);
                 }).catch(errors=>{
                     console.log(errors);
