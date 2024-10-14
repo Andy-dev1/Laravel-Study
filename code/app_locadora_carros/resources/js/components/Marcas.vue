@@ -27,7 +27,12 @@
                 <!-- #region relacao de marcas -->
                 <card-component titulo="Relação de marcas">
                     <template v-slot:conteudo>
-                        <table-component v-if="marcas.data" :dados="marcas.data" :titulos="{
+                        <table-component v-if="marcas.data" 
+                        :dados="marcas.data"
+                        :visualizar="true"
+                        :atualizar="true"
+                        :remover="true"
+                        :titulos="{
                             id: {titulo:'ID',tipo:'text'},
                             nome: {titulo:'Nome',tipo:'text'},
                             imagem: {titulo:'Imagem',tipo:'imagem'},
@@ -56,6 +61,7 @@
                 <!-- #endregion relacao de marcas -->
             </div>
         </div>
+        <!-- #region inicio modal de inclusao de marca -->
         <modal-component id="modalMarca" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component tipo="success" :detalhes="transacaoDetalhes" titulo="Cadastro realizado com sucesso" v-if="transacaoStatus=='adicionado'"></alert-component>
@@ -82,9 +88,22 @@
                 <button type="button" class="btn btn-primary" @click="salvar()">Salvar</button>
             </template>
         </modal-component>
-       
-
-       
+       <!-- #endregion inicio modal de inclusao de marca -->
+       <!-- #region modal de visualização de marca -->
+        <modal-component id="modalMarcaVisualizar" titulo="Visualizar marca">
+            <template v-slot:alertas>
+               
+            </template>
+            <template v-slot:conteudo>
+               Teste
+            </template>
+            <template v-slot:rodape>
+                
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+               
+            </template>
+        </modal-component>
+       <!-- #endregion modal de visualização de marca -->
     </div>
 </template>
 
@@ -93,6 +112,8 @@
         data(){
             return{
                 urlBase:'http://localhost:8000/api/v1/marca',
+                urlPaginacao:'',
+                urlFiltro:'',
                 nomeMarca:'',
                 arquivoImagem:[],
                 transacaoStatus: '',
@@ -129,17 +150,25 @@
                         filtro+=chave+':like:'+this.busca[chave];
                     }
                 }
-                console.log(filtro);
+                if(filtro != ''){
+                    this.urlPaginacao='page=1'
+                    this.urlFiltro='&filtro='+filtro
+                }else{
+                    this.urlFiltro=''
+                }
+                this.carregarLista();
                 
             },
             paginacao(l){
                 if(l.url){
-                    this.urlBase=l.url;
+                    //this.urlBase=l.url;
+                    this.urlPaginacao=l.url.split('?')[1];
                     this.carregarLista();
                 }
                 
             },
             carregarLista(){
+                let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro
                 let config={
                     headers:{
                         
@@ -148,7 +177,7 @@
                     }
                 }
 
-                axios.get(this.urlBase,config).then(response=>{
+                axios.get(url,config).then(response=>{
                     this.marcas=response.data
                     // console.log(this.marcas);
                 }).catch(errors=>{
