@@ -2,7 +2,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                
                 <!-- #region busca de marcas -->
+                
                 <card-component titulo="Busca de marcas">
                     <template v-slot:conteudo>
                         <div class="row">
@@ -29,7 +31,7 @@
                     <template v-slot:conteudo>
                         <table-component v-if="marcas.data" 
                         :dados="marcas.data"
-                        :visualizar="true"
+                        :visualizar="{visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaVisualizar'}"
                         :atualizar="true"
                         :remover="true"
                         :titulos="{
@@ -95,7 +97,19 @@
                
             </template>
             <template v-slot:conteudo>
-               Teste
+               
+               <input-container-component titulo="ID">
+                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
+               </input-container-component>
+               <input-container-component titulo="Nome da marca">
+                    <input type="text" class="form-control" :value="$store.state.item.nome" disabled>
+               </input-container-component>
+               <input-container-component titulo="Imagem">
+                    <img :src="'storage/'+$store.state.item.imagem" alt="" v-if="$store.state.item.imagem">
+               </input-container-component>
+               <input-container-component titulo="Data de criação">
+                    <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+               </input-container-component>
             </template>
             <template v-slot:rodape>
                 
