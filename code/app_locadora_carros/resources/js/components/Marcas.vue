@@ -33,7 +33,11 @@
                         :dados="marcas.data"
                         :visualizar="{visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaVisualizar'}"
                         :atualizar="true"
-                        :remover="true"
+                        :remover="{
+                            visivel:true,
+                            dataToggle:'modal',
+                            dataTarget:'#modalMarcaRemover'
+                        }"
                         :titulos="{
                             id: {titulo:'ID',tipo:'text'},
                             nome: {titulo:'Nome',tipo:'text'},
@@ -56,6 +60,7 @@
                             </div>
                             <div class="col">
                                 <button type="button" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
+                               
                             </div>
                         </div>
                     </template>
@@ -118,6 +123,29 @@
             </template>
         </modal-component>
        <!-- #endregion modal de visualização de marca -->
+       <!-- #region modal de remoção de marca -->
+        <modal-component id="modalMarcaRemover" titulo="Remover marca">
+            <template v-slot:alertas>
+               
+            </template>
+            <template v-slot:conteudo>
+               
+               <input-container-component titulo="ID">
+                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
+               </input-container-component>
+               <input-container-component titulo="Nome da marca">
+                    <input type="text" class="form-control" :value="$store.state.item.nome" disabled>
+               </input-container-component>
+              
+            </template>
+            <template v-slot:rodape>
+                
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="remover()">Remover</button>
+               
+            </template>
+        </modal-component>
+       <!-- #endregion modal de remoção de marca -->
     </div>
 </template>
 
@@ -150,6 +178,36 @@
             }
         },
         methods:{
+            remover(){
+                let confirmacao = confirm('Tem certeza que deseja remover esse registro?')
+                if(!confirmacao) {
+                    return false
+                }
+                
+                let formData=new FormData();
+                formData.append('_method','delete')
+
+                let config={
+                    headers:{
+                        'Accept':'application/json',
+                        'Autorization':this.token
+                    }
+                }
+
+                let url = this.urlBase + '/' + this.$store.state.item.id
+
+                
+                
+                axios.post(url,formData,config)
+                    .then(response=>{
+                        console.log('Registro removido com sucesso',response);
+                        this.carregarLista();
+                    }).catch(errors=>{
+                        console.log('Houve um erro na tentativa de remoção do registro',errors.response);
+                        
+                    })
+                
+            },
             pesquisar(){
                 //console.log(this.busca);
                 let filtro='';
