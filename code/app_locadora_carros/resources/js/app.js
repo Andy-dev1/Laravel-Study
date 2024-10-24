@@ -14,23 +14,21 @@ import { createStore } from "vuex";
  * to use in your application's views. An example is included for you.
  */
 
-const store= createStore({
-    state(){
-        return{
-            item:{}
-        }
+const store = createStore({
+    state() {
+        return {
+            item: {},
+            transacao: { status: "", mensagem: "" },
+        };
     },
-    mutations:{
+    mutations: {
         // increment(state){
         //     state.count++;
         // }
-    }
-})
-
+    },
+});
 
 const app = createApp({});
-
-
 
 import ExampleComponent from "./components/ExampleComponent.vue";
 import LoginComponent from "./components/Login.vue";
