@@ -154,7 +154,8 @@
        <!-- #region inicio modal de atualizacao de marca -->
         <modal-component id="modalMarcaAtualizar" titulo="Atualizar marca">
             <template v-slot:alertas>
-                
+               <alert-component tipo="success" titulo="Transação realizada com sucesso" :detalhes="$store.state.transacao" v-if="$store.state.transacao.status=='sucesso'"></alert-component>
+               <alert-component tipo="danger" titulo="Erro na transação" :detalhes="$store.state.transacao" v-if="$store.state.transacao.status=='erro'"></alert-component>
             </template>
             <template v-slot:conteudo>
                 <div class="form-group">
@@ -235,14 +236,18 @@
 
                 axios.post(url,formData,config)
                 .then(response=>{
-                    console.log("Atualizado",response);
+                   
                     //Limpar o campo de seleção de arquivos
                     atualizarImagem.value=''
+                    this.$store.state.transacao.status="sucesso";
+                    this.$store.state.transacao.mensagem= 'Registro de marca atualizado com sucesso';
                     this.carregarLista();
                 })
                 .catch(errors=>{
-                    console.log('Erro de atualização',errors.response);
                     
+                    this.$store.state.transacao.status="erro";
+                    this.$store.state.transacao.mensagem=errors.response.data.message;
+                    this.$store.state.transacao.dados=errors.response.data.errors;
                 })
             },
             remover(){
