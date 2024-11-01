@@ -18,7 +18,7 @@ const store = createStore({
     state() {
         return {
             item: {},
-            transacao: { status: "", mensagem: "",dados:"" },
+            transacao: { status: "", mensagem: "", dados: "" },
         };
     },
     mutations: {
@@ -29,6 +29,24 @@ const store = createStore({
 });
 
 const app = createApp({});
+
+app.config.globalProperties.$filters = {
+    formataDataTempo(d) {
+        if (!d) return "";
+
+        d = d.split("T");
+
+        let data = d[0];
+        let tempo = d[1];
+
+        data = data.split("-");
+
+        data = data[2] + "/" + data[1] + "/" + data[0];
+        tempo = tempo.split(".")[0];
+
+        return data + " " + tempo;
+    },
+};
 
 import ExampleComponent from "./components/ExampleComponent.vue";
 import LoginComponent from "./components/Login.vue";
